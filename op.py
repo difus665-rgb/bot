@@ -7,7 +7,7 @@ app = FastAPI(title="Sky-Impacte Python Backend")
 # Файл для збереження бази даних
 DB_FILE = "si_db.json"
 
-@app.get("/", response_class=HTMLResponse)
+@app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 def read_index():
     # Автоматически находит файл index.html в той же папке, где лежит op.py
     html_path = os.path.join(os.path.dirname(__file__), "index.html")
@@ -19,4 +19,5 @@ def read_index():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("op:app", host="0.0.0.0", port=port)
