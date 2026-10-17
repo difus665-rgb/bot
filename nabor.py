@@ -6,10 +6,6 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 
-# --- НАСТРОЙКИ ---
-TOKEN = "8736462738:AAHYnNisq5No5j4d9MCMTYbVSdw6FVSGiMk"
-ADMIN_IDS = [7294783514, 8866962638]  # Впиши сюда Telegram ID админов через запятую
-
 # Временный список пользователей для рассылки (в памяти бота)
 users_db = set()
 
