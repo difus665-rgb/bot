@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sky-Impacte</title>
+<style>
+:root{color-scheme:dark;--fg:#f4f7ff;--mut:#9fb4e8;--card:rgba(255,255,255,.07);--line:rgba(255,255,255,.17);--acc:#3b82f6;--bad:#ff7b7b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:#02030a;color:var(--fg);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+button,input{font-family:inherit;font-size:16px}
+#bg{position:fixed;inset:0;z-index:0;background:linear-gradient(125deg,#01020a 0%,#06134a 35%,#02030a 60%,#0a2a7c 100%);background-size:300% 300%;animation:flow 14s ease-in-out infinite}
+#bg::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 40% at 30% 70%,rgba(80,140,255,.22),transparent 70%),radial-gradient(50% 35% at 75% 25%,rgba(40,90,255,.18),transparent 70%);animation:pulse 7s ease-in-out infinite alternate}
+@keyframes flow{50%{background-position:100% 50%}}
+@keyframes pulse{to{opacity:.35;transform:scale(1.15)}}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+#cv{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;transition:opacity 1s}
+.scr{position:fixed;inset:0;z-index:2;display:none}
+.scr.on{display:block}
+#logo{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 12vh);text-align:center;font-size:clamp(34px,9vw,56px);letter-spacing:.04em;margin:0;opacity:0;transition:opacity 1.6s;text-shadow:0 0 30px rgba(80,140,255,.8)}
+.fmode #logo{opacity:0!important}
+.big{position:absolute;background:transparent;color:#fff;border:3px solid #fff;font-weight:600;font-size:20px;font-family:system-ui,sans-serif;border-radius:28px;opacity:0;pointer-events:none;cursor:pointer;transition:opacity .9s,transform .15s,box-shadow .3s,background .3s}
+.big.on{opacity:1;pointer-events:auto}
+.big:hover{background:rgba(255,255,255,.1);box-shadow:0 0 28px rgba(120,170,255,.55)}
+.big:active{transform:scale(.96)}
+.fmode .big{opacity:0;pointer-events:none}
+#fm{position:absolute;left:50%;top:50%;width:min(92vw,380px);transform:translate(-50%,-46%) scale(.96);opacity:0;pointer-events:none;transition:all .35s}
+#fm.on{opacity:1;transform:translate(-50%,-50%);pointer-events:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;backdrop-filter:blur(8px);margin-bottom:14px}
+.inp{width:100%;background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:#fff;outline:0;margin-bottom:10px;transition:border .2s,background .2s}
+.inp:focus{border-color:var(--acc);background:rgba(255,255,255,.11)}
+.btn{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:0;border-radius:14px;padding:12px 18px;font-weight:600;cursor:pointer;transition:transform .15s,box-shadow .25s,filter .2s}
+.btn:hover{filter:brightness(1.12);box-shadow:0 0 22px rgba(59,130,246,.5)}
+.btn:active{transform:scale(.96)}
+.ghost{background:transparent;border:1px solid var(--line)}
+.bad{background:linear-gradient(135deg,#dc2626,#991b1b)}
+.er{min-height:20px;color:var(--bad);font-size:14px;margin:0 0 8px}
+#top{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;display:flex;align-items:center;gap:12px;background:rgba(2,6,24,.55);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);z-index:5}
+#ttl{font-size:20px}
+#burger{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-content:center;gap:5px;cursor:pointer;transition:transform .15s}
+#burger:active{transform:scale(.92)}
+#burger i{display:block;width:20px;height:2px;background:#fff;border-radius:2px;transition:.3s}
+.open #burger i:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.open #burger i:nth-child(2){opacity:0}
+.open #burger i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+#dr{position:absolute;top:0;bottom:0;left:0;width:min(78vw,290px);padding:calc(env(safe-area-inset-top,0px) + 70px) 14px 20px;background:rgba(3,10,40,.96);border-right:1px solid var(--line);transform:translateX(-102%);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:4;display:flex;flex-direction:column;gap:8px}
+#ov{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s;z-index:3}
+.open #dr{transform:none}
+.open #ov{opacity:1;pointer-events:auto}
+.mi{text-align:left;background:transparent;border:0;color:#fff;font-weight:600;font-size:17px;padding:13px 14px;border-radius:12px;cursor:pointer;transition:background .2s,transform .15s}
+.mi:hover,.mi.cur{background:rgba(59,130,246,.28)}
+.mi:active{transform:scale(.97)}
+#view{position:absolute;inset:0;overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 84px) 16px calc(env(safe-area-inset-bottom,0px) + 24px)}
+#view>div{max-width:560px;margin:0 auto;animation:in .45s ease}
+.row{display:flex;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row b{flex:0 0 70px;color:var(--mut);font-weight:500}
+.row>span{flex:1;word-break:break-all}
+.ic{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:#fff;cursor:pointer;transition:transform .15s,background .2s}
+.ic:hover{background:rgba(59,130,246,.3)}
+.ic:active{transform:scale(.9)}
+#eye{touch-action:none;user-select:none;-webkit-user-select:none}
+.m{max-width:88%;padding:9px 12px;border-radius:14px;margin:6px 0;background:rgba(255,255,255,.09);animation:in .3s;word-break:break-word}
+.m.a{background:rgba(59,130,246,.38);margin-left:auto}
+.h{margin:0 0 8px}
+.mt{color:var(--mut);font-size:14px;margin:0 0 8px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#ts{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translate(-50%,30px);opacity:0;background:#0b1b55;border:1px solid var(--line);padding:10px 16px;border-radius:12px;transition:.3s;z-index:9;pointer-events:none;max-width:90vw;text-align:center}
+#ts.on{opacity:1;transform:translate(-50%,0)}
+#view.cv2{overflow:hidden;padding:calc(env(safe-area-inset-top,0px) + 66px) 0 env(safe-area-inset-bottom,0px)}
+#view.cv2>div{height:100%;max-width:680px;display:flex;flex-direction:column;animation:none}
+.chw{flex:1;min-height:0;display:flex;flex-direction:column;background:rgba(4,10,38,.55);border:1px solid var(--line);border-radius:18px 18px 0 0;overflow:hidden}
+.chh{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.05)}
+.chh b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chs{font-size:13px;color:var(--mut);padding:6px 12px;text-align:center}
+.ch-b{flex:1;min-height:0;overflow:auto;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.tm{max-width:82%;padding:8px 11px 5px;border-radius:16px 16px 16px 5px;background:rgba(255,255,255,.1);align-self:flex-start;word-break:break-word;animation:in .25s}
+.tm.me{align-self:flex-end;background:linear-gradient(135deg,#2b6df0,#1d4ed8);border-radius:16px 16px 5px 16px}
+.tm .nm{font-size:12px;font-weight:700;margin-bottom:2px}
+.tm .tt{font-size:11px;color:rgba(255,255,255,.55);text-align:right;margin-top:2px}
+.chf{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:rgba(2,6,24,.8)}
+.chf .inp{margin:0;border-radius:22px}
+.chf .btn{border-radius:22px;padding:0 18px}
+</style>
+</head>
+<body>
+<div id="bg"></div><canvas id="cv"></canvas>
+<div class="scr" id="intro">
+  <h1 id="logo">Sky-Impacte</h1>
+  <button class="big" id="bR" data-a="openR">Зарегистрироваться</button>
+  <button class="big" id="bL" data-a="openL">Войти</button>
+  <div id="fm"></div>
+</div>
+<div class="scr" id="app">
+  <div id="top"><button id="burger" data-a="tg" aria-label="Меню"><i></i><i></i><i></i></button><b id="ttl"></b></div>
+  <div id="ov" data-a="tg"></div>
+  <nav id="dr"></nav>
+  <main id="view"></main>
+</div>
+<div id="ts"></div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const M={},ST={g(k){try{return localStorage.getItem(k)}catch(e){return M[k]===undefined?null:M[k]}},s(k,v){try{localStorage.setItem(k,v)}catch(e){M[k]=v}},d(k){try{localStorage.removeItem(k)}catch(e){delete M[k]}}};
+const MAIN='admin0@gmail.com',ADMH='fe5ac9593fb90881bc7e5c7f7d3ddf11f8dad2bd6a0f7a577b42efac018fa75b'; /* главный админ: ник admin, пароль хранится только как хеш */
+const sha=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('si:'+s)))].map(b=>b.toString(16).padStart(2,'0')).join(''),pwok=async(u,p)=>u.h?(await sha(p))===u.h:u.p===p;
+function load(){let d;try{d=JSON.parse(ST.g('si_db'))}catch(e){}if(!d||typeof d!='object'||Array.isArray(d))d={};['users','sup','log'].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});d.users=d.users.filter(u=>u&&typeof u.n=='string'&&typeof u.e=='string');if(!d.tk||typeof d.tk!='object'||Array.isArray(d.tk))d.tk={};if(d.link===undefined)d.link='https://github.com';if(!d.users.some(u=>u.e===MAIN)){d.users.forEach(u=>{if(u.n.toLowerCase()=='admin')u.n='admin_'+u.c.slice(0,3)});d.users.push({n:'admin',e:MAIN,p:'••••••••',h:ADMH,c:[...crypto.getRandomValues(new Uint8Array(8))].map(b=>'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[b%36]).join(''),adm:2,ban:0,ns:0,kick:0});ST.s('si_db',JSON.stringify(d))}return d}
+let db=load(),me=null,view='home',ed=null,sg='',started=0,done=false,ct=null,xp=null,pw0='';
+const save=()=>ST.s('si_db',JSON.stringify(db)),U=n=>db.users.find(u=>u.n.toLowerCase()==String(n).toLowerCase()),cur=()=>me&&db.users.find(u=>u.n===me),sT=()=>+ST.g('si_t')||0;
+const sig=()=>{const u=cur()||{};return db.sup.length+'|'+db.log.length+'|'+db.link+'|'+u.ns+'|'+u.adm+'|'+JSON.stringify(db.tk)};
+let ac;function snd(f=520,d=.09,v=.04,ty='sine'){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d)}catch(e){}}
+const ok=()=>{snd(660,.1);setTimeout(()=>snd(990,.14),90)},no=()=>snd(180,.2,.05,'square');
+let tt;function toast(m){const t=$('#ts');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
+function scr(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id===id))}
+
+/* ---------- интро: частицы собирают кнопки ---------- */
+const cv=$('#cv'),cx=cv.getContext('2d');let W,H,G,P=[],T0=0;
+function place(){const bw=Math.min(W*.8,300),bh=56;G={bw,bh,x:(W-bw)/2,a:H/2-20,b:H/2+60};[['bR',G.a],['bL',G.b]].forEach(([id,y])=>{const e=$('#'+id).style;e.left=G.x+'px';e.top=y+'px';e.width=bw+'px';e.height=bh+'px'})}
+function targets(){const o=document.createElement('canvas');o.width=W;o.height=H;const c=o.getContext('2d');c.fillStyle=c.strokeStyle='#fff';c.lineWidth=3;c.font='600 20px system-ui,sans-serif';c.textAlign='center';c.textBaseline='middle';
+[[G.a,'Зарегистрироваться'],[G.b,'Войти']].forEach(([y,s])=>{c.beginPath();c.roundRect?c.roundRect(G.x+1.5,y+1.5,G.bw-3,G.bh-3,26.5):c.rect(G.x+1.5,y+1.5,G.bw-3,G.bh-3);c.stroke();c.fillText(s,W/2,y+G.bh/2)});
+const d=c.getImageData(0,0,W,H).data,pts=[];for(let j=0;j<H;j+=2)for(let i=0;i<W;i+=2)if(d[(j*W+i)*4+3]>110)pts.push([i,j]);return pts}
+let T=0,last=0,fr=0,run=0;
+function sizeCv(){const r=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*r;cv.height=H*r;cx.setTransform(r,0,0,r,0,0)}
+function reveal(){if(done)return;done=true;$('#bR').classList.add('on');$('#bL').classList.add('on');cv.style.opacity=0;snd(440,.3,.03)}
+function start(){const id=++run,lg=$('#logo');started=1;done=false;fr=0;T=0;last=0;P=[];
+$('#bR').classList.remove('on');$('#bL').classList.remove('on');cv.style.transition='none';cv.style.opacity=1;void cv.offsetWidth;cv.style.transition='';lg.style.opacity=0;
+const go=()=>{if(id!==run)return;if(!innerWidth||!innerHeight)return requestAnimationFrame(go);sizeCv();place();
+try{P=targets().map(([x,y])=>({sx:Math.random()*W,sy:H+20+Math.random()*H*.5,tx:x,ty:y,d:Math.random()*1.5,w:Math.random()*6.28}))}catch(e){return reveal()}
+requestAnimationFrame(()=>{lg.style.opacity=1});
+const L=now=>{if(id!==run)return;const dt=last?Math.min(.05,(now-last)/1000):0;last=now;T+=dt;fr++;const t=T;cx.clearRect(0,0,W,H);cx.fillStyle='#fff';
+for(const p of P){let k=Math.min(1,Math.max(0,(t-p.d)/2.4));k=1-Math.pow(1-k,3);const w=(1-k)*Math.sin(t*3+p.w)*18;cx.globalAlpha=.35+.65*k;cx.fillRect(p.sx+(p.tx-p.sx)*k+w,p.sy+(p.ty-p.sy)*k,1.8,1.8)}
+cx.globalAlpha=1;if(t>4)reveal();if(t<5.2)requestAnimationFrame(L);else cx.clearRect(0,0,W,H)};
+requestAnimationFrame(L);setTimeout(()=>{if(id===run&&!fr&&!document.hidden)reveal()},3000)};
+requestAnimationFrame(go)}
+function loop(now){const t=(now-T0)/1000;cx.clearRect(0,0,W,H);cx.fillStyle='#fff';
+for(const p of P){let k=Math.min(1,Math.max(0,(t-p.d)/2.4));k=1-Math.pow(1-k,3);const w=(1-k)*Math.sin(t*3+p.w)*18;cx.globalAlpha=.35+.65*k;cx.fillRect(p.sx+(p.tx-p.sx)*k+w,p.sy+(p.ty-p.sy)*k,2.2,2.2)}
+cx.globalAlpha=1;
+if(t>4&&!done){done=true;$('#bR').classList.add('on');$('#bL').classList.add('on');cv.style.opacity=0;snd(440,.3,.03)}
+if(t<5.2)requestAnimationFrame(loop);else cx.clearRect(0,0,W,H)}
+addEventListener('resize',()=>{if(done){sizeCv();place()}else if(started&&$('#intro').classList.contains('on'))start()});
+
+/* ---------- формы входа ---------- */
+function form(k){const r=k=='r';$('#fm').innerHTML=`<div class="card"><h2 style="margin:0 0 12px">${r?'Регистрация':'Вход'}</h2>${r?'<input class="inp" id="f1" placeholder="Никнейм" autocomplete="username" maxlength="16"><input class="inp" id="f2" type="email" placeholder="Gmail (name@gmail.com)" autocomplete="email">':'<input class="inp" id="f1" placeholder="Никнейм или Gmail" autocomplete="username">'}<input class="inp" id="f3" type="password" placeholder="Пароль (от 4 символов)" autocomplete="${r?'new-password':'current-password'}"><div id="er" class="er"></div><button class="btn" data-a="${r?'reg':'log'}" style="width:100%">${r?'Зарегистрироваться':'Войти'}</button><button class="btn ghost" data-a="back" style="width:100%;margin-top:8px">Назад</button></div>`;$('#intro').classList.add('fmode');$('#fm').classList.add('on')}
+function enter(n,first){me=n;ST.s('si_me',n);ST.s('si_t',Date.now());A.back();scr('app');view='home';render();ok();if(first)toast('Добро пожаловать в Sky-Impacte!')}
+function logout(m){me=null;ST.d('si_me');$('#app').classList.remove('open');scr('intro');A.back();start();if(m)toast(m)}
+
+/* ---------- экраны ---------- */
+const TT={home:'Главное',dl:'Скачать клиент',support:'Поддержка',acc:'Аккаунт',admin:'Админ-панель',adsup:'Обращения',adchat:'Чат',adlog:'Журнал'};
+const bub=m=>`<div class="m ${m.a?'a':''}">${m.a?'<small>'+esc(m.by)+' (админ)</small><br>':''}${esc(m.t)}</div>`;
+const V={
+home:u=>`<div class="card"><h2 style="margin:0 0 6px">Привет, ${esc(u.n)}!</h2><p class="mt" style="margin-bottom:16px">Добро пожаловать в Sky-Impacte.</p><div class="mt" style="margin-bottom:6px">Ваш код</div><div style="display:flex;gap:8px"><input class="inp" style="margin:0;letter-spacing:.2em;font-weight:700;text-align:center" value="${u.c}" readonly><button class="btn" data-a="cp">Копировать</button></div></div>`,
+dl:()=>`<div class="card" style="text-align:center"><h2 style="margin-top:0">Скачать клиент</h2>${db.link?`<a class="btn" style="display:inline-block;text-decoration:none" href="${esc(db.link)}" target="_blank" rel="noopener">Скачать</a>`:'<p class="mt">Ссылка пока не задана</p>'}</div>`,
+support:u=>{const d=db.tk[u.n]&&db.tk[u.n].done;
+return`<div class="chw"><div class="chh"><b>Поддержка</b></div>${d?`<div class="chs">✓ Обращение принято (${esc(db.tk[u.n].by)})</div>`:'<div class="chs">Ваш вопрос увидят все админы</div>'}<div class="ch-b">${msgHtml(u.n,u)||'<div class="chs">Напиши свой вопрос</div>'}</div>${u.ns?'<p class="er" style="padding:10px">Админ запретил вам писать в поддержку.</p>':'<div class="chf"><input class="inp" id="sm" placeholder="Сообщение…" maxlength="500"><button class="btn" data-a="ssend">➤</button></div>'}</div>`},
+support0:u=>{const ms=db.sup.filter(m=>m.u===u.n);return`<div class="card"><h2 style="margin:0 0 4px">Поддержка</h2><p class="mt">Ваш вопрос увидят все админы.</p><div>${ms.map(bub).join('')||'<small class="mt">Сообщений пока нет</small>'}</div>${u.ns?'<p class="er" style="margin-top:10px">Админ запретил вам писать в поддержку.</p>':'<div style="display:flex;gap:8px;margin-top:10px"><input class="inp" id="sm" style="margin:0" placeholder="Опишите вопрос…" maxlength="500"><button class="btn" data-a="ssend">Отправить</button></div>'}</div>`},
+acc:u=>{const f=(k,l,val,btns)=>`<div class="row"><b>${l}</b>${ed==k?`<input class="inp" id="ei" style="margin:0" ${k=='p'?'type="password" placeholder="Новый пароль"':`value="${esc(u.n)}"`}><button class="ic" data-a="esave" data-k="${k}">✔</button><button class="ic" data-a="ecancel">✕</button>`:`<span>${val}</span>${btns}`}</div>`;
+return`<div class="card"><h2 style="margin:0 0 6px">Аккаунт</h2>${f('n','Ник',esc(u.n),'<button class="ic" data-a="edit" data-k="n">✎</button>')}<div class="row"><b>Почта</b><span>${esc(u.e)}</span></div>${f('p','Пароль','<span id="pw">'+'•'.repeat(u.p.length)+'</span>','<button class="ic" data-a="edit" data-k="p">✎</button><button class="ic" id="eye" title="Удерживай, чтобы показать">👁</button>')}<button class="btn bad" data-a="lo" style="width:100%;margin-top:16px">Выйти</button></div>`},
+adsup:()=>{const th=[...new Set(db.sup.map(m=>m.u))].map(n=>{const ms=db.sup.filter(m=>m.u===n);return{n,l:ms[ms.length-1],d:!!(db.tk[n]&&db.tk[n].done)}}).sort((a,b)=>a.d-b.d||b.l.ts-a.l.ts);
+return`<div class="card"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><button class="ic" data-a="go" data-v="admin">←</button><b>Обращения поддержки</b></div>${th.map(x=>`<div style="border-top:1px solid var(--line);padding:10px 0"><div class="row" style="border:0;padding:0;cursor:pointer" data-a="xp" data-n="${esc(x.n)}"><b style="flex:0 0 auto;color:#fff">${esc(x.n)}${x.d?' ✓':''}</b><span class="mt" style="margin:0;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${x.l.a?'↩ ':''}${esc(x.l.t)}</span></div>${xp==x.n?`<div class="g" style="margin-top:10px"><button class="btn" data-a="opn" data-n="${esc(x.n)}">Открыть чат</button><button class="btn ghost" data-a="fin" data-n="${esc(x.n)}">${x.d?'✓ Принят':'Принят'}</button>${cur().adm==2?`<button class="btn bad" style="grid-column:1/-1" data-a="delchat" data-n="${esc(x.n)}">Удалить чат</button>`:''}</div>`:''}</div>`).join('')||'<small class="mt">Обращений пока нет</small>'}</div>`},
+adchat:u=>{const n=ct,t=db.tk[n]||{},d=!!t.done,own=u.adm==2;
+return`<div class="chw"><div class="chh"><button class="ic" data-a="go" data-v="adsup">←</button><b>${esc(n)}</b><button class="btn ${d?'':'ghost'}" style="padding:8px 12px" data-a="fin" data-n="${esc(n)}">${d?'✓ Принят':'Принят'}</button>${own?`<button class="ic" data-a="delchat" data-n="${esc(n)}" title="Удалить чат">🗑</button>`:''}</div>${d?`<div class="chs">✓ Принял: ${esc(t.by)}</div>`:''}<div class="ch-b">${msgHtml(n,u)||'<div class="chs">Сообщений нет</div>'}</div><div class="chf"><input class="inp" id="am" placeholder="Сообщение…" maxlength="500"><button class="btn" data-a="areply2" data-n="${esc(n)}">➤</button></div></div>`},
+adchat0:u=>{const n=ct,ms=db.sup.filter(m=>m.u===n),d=!!(db.tk[n]&&db.tk[n].done),own=u.adm==2;
+return`<div class="card"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><button class="ic" data-a="go" data-v="adsup">←</button><b style="flex:1">${esc(n)}</b><button class="btn ${d?'ghost':''}" data-a="fin" data-n="${esc(n)}">${d?'✓ Выполнено':'Выполнено'}</button></div><div>${ms.map(m=>`<div class="m ${m.a?'a':''}">${m.a?'<small>'+esc(m.by)+'</small><br>':''}${esc(m.t)}${own?`<br><button class="ic" style="width:auto;height:auto;padding:2px 8px;margin-top:4px;font-size:12px" data-a="dmsg" data-n="${esc(n)}" data-ts="${m.ts}">Удалить</button>`:''}</div>`).join('')||'<small class="mt">Сообщений нет</small>'}</div><div style="display:flex;gap:8px;margin-top:10px"><input class="inp" id="am" style="margin:0" placeholder="Ответ…" maxlength="500"><button class="btn" data-a="areply2" data-n="${esc(n)}">Отправить</button></div></div>`},
+adlog:()=>`<div class="card"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><button class="ic" data-a="go" data-v="admin">←</button><b>Журнал админов</b></div>${db.log.slice(-60).reverse().map(l=>`<div class="mt" style="padding:4px 0;margin:0">${esc(l)}</div>`).join('')||'<small class="mt">Пока пусто</small>'}</div>`,
+admin:u=>{const main=u.adm==2,th=[...new Set(db.sup.map(m=>m.u))];
+const inbox=th.map(n=>`<div style="margin-bottom:14px"><b>${esc(n)}</b>${db.sup.filter(m=>m.u===n).slice(-6).map(bub).join('')}<div style="display:flex;gap:8px"><input class="inp" style="margin:0" data-r="${esc(n)}" placeholder="Ответ…"><button class="btn" data-a="areply" data-n="${esc(n)}">Ответить</button></div></div>`).join('')||'<small class="mt">Обращений нет</small>';
+return`<div class="card"><h3 class="h">Изменить ссылку на скачивание</h3><p class="mt">Сейчас: ${db.link?esc(db.link):'не задана'}</p><input class="inp" id="lk" placeholder="https://…" value="${esc(db.link)}"><div style="display:flex;gap:8px"><button class="btn" data-a="slink" style="flex:1">Изменить</button><button class="btn ghost" data-a="dlink">Удалить</button></div></div>
+<div class="card"><h3 class="h">Игрок</h3><input class="inp" id="pn" placeholder="Ник игрока"><input class="inp" id="np" placeholder="Новый пароль (для смены)"><div class="g"><button class="btn bad" data-a="mod" data-k="ban">Бан / разбан</button><button class="btn ghost" data-a="mod" data-k="ns">Запрет поддержки</button><button class="btn ghost" data-a="mod" data-k="kick">Кикнуть</button><button class="btn ghost" data-a="mod" data-k="pw">Сменить пароль</button></div></div>
+<div class="card"><h3 class="h">Выдать админку</h3><input class="inp" id="an" placeholder="Ник игрока"><div class="g"><button class="btn" data-a="adm" data-k="1">Выдать</button>${main?'<button class="btn ghost" data-a="adm" data-k="0">Снять</button>':''}</div></div>
+<div class="card"><h3 class="h">Поддержка</h3><button class="btn" style="width:100%" data-a="go" data-v="adsup">Обращения поддержки${(n=>n?' ('+n+')':'')(th.filter(n=>!(db.tk[n]&&db.tk[n].done)).length)}</button></div>
+<div class="card"><h3 class="h">Журнал</h3><button class="btn" style="width:100%" data-a="go" data-v="adlog">Журнал админов</button></div>`}
+};
+function render(){const u=cur();if(!u)return;if(/^ad/.test(view)&&!u.adm)view='home';const v=$('#view'),s=v.scrollTop;$('#ttl').textContent=TT[view];
+$('#dr').innerHTML=['home','dl','support','acc'].concat(u.adm?['admin']:[]).map(k=>`<button class="mi ${k==view?'cur':''}" data-a="go" data-v="${k}">${TT[k]}</button>`).join('');
+v.className=(view=='support'||view=='adchat')?'cv2':'';v.innerHTML='<div>'+V[view](u)+'</div>';v.scrollTop=s;sg=sig();const cb=$('.ch-b');if(cb)cb.scrollTop=cb.scrollHeight}
+
+/* ---------- действия ---------- */
+const NICK=/^[\wа-яё.-]{3,16}$/i;
+let cd=null,cdt;
+const col=n=>`hsl(${[...n].reduce((a,c)=>a+c.charCodeAt(0),0)*7%360} 85% 72%)`,hm=ts=>new Date(ts).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+function msgHtml(n,u){const own=u.adm==2;return db.sup.filter(m=>m.u===n).map(m=>{const nick=m.a?m.by:n,mine=m.a?m.by===u.n:n===u.n;return`<div class="tm ${mine?'me':''}">${mine?'':`<div class="nm" style="color:${col(nick)}">${esc(nick)}${m.a?' · админ':''}</div>`}${esc(m.t)}<div class="tt">${hm(m.ts)}${own?` <span data-a="dmsg" data-n="${esc(n)}" data-ts="${m.ts}" style="cursor:pointer;margin-left:6px">🗑</span>`:''}</div></div>`}).join('')}
+function tickRender(){const f=document.activeElement,typing=f&&f.tagName=='INPUT',c=$('.ch-b'),u=cur();if(typing&&c&&u&&(view=='support'||view=='adchat')){sg=sig();c.innerHTML=msgHtml(view=='adchat'?ct:u.n,u)||'<div class="chs">Сообщений нет</div>';c.scrollTop=c.scrollHeight}else if(!typing)render()}
+document.addEventListener('contextmenu',e=>{const r=e.target.closest('[data-a=xp]');if(r){e.preventDefault();xp=r.dataset.n;render()}});
+const A={
+openR(){form('r');snd(480)},openL(){form('l');snd(480)},
+back(){$('#fm').classList.remove('on');$('#intro').classList.remove('fmode')},
+reg(){db=load();const n=$('#f1').value.trim(),e=$('#f2').value.trim().toLowerCase(),p=$('#f3').value,er=m=>{$('#er').textContent=m;no()};
+if(!NICK.test(n))return er('Ник: 3–16 символов (буквы, цифры, . _ -)');
+if(e!==MAIN&&!/^(?=.{6,30}@)[a-z0-9]+(\.[a-z0-9]+)*@gmail\.com$/.test(e))return er('Нужен настоящий Gmail вида name@gmail.com');
+if(p.length<4)return er('Пароль: минимум 4 символа');
+if(U(n))return er('Этот ник уже занят');
+if(db.users.some(u=>u.e===e))return er('Эта почта уже зарегистрирована');
+const c=[...crypto.getRandomValues(new Uint8Array(8))].map(b=>'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[b%36]).join('');
+db.users.push({n,e,p,c,adm:e===MAIN?2:0,ban:0,ns:0,kick:0});save();enter(n,true)},
+async log(){db=load();const v=$('#f1').value.trim().toLowerCase(),p=$('#f3').value,u=db.users.find(x=>x.n.toLowerCase()==v||x.e==v);
+if(!u||!(await pwok(u,p))){$('#er').textContent='Неверный ник/Gmail или пароль';return no()}
+if(u.ban){$('#er').textContent='Аккаунт заблокирован';return no()}
+pw0=p;enter(u.n)},
+tg(){$('#app').classList.toggle('open')},
+go(b){view=b.dataset.v;ed=null;$('#app').classList.remove('open');render();$('#view').scrollTop=0},
+cp(){const t=cur().c;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Код скопирован'),()=>{const i=$('#view input');i.select();try{document.execCommand('copy');toast('Код скопирован')}catch(e){toast('Выделите код и скопируйте')}});ok()},
+ssend(){const i=$('#sm'),t=i.value.trim();db=load();const u=cur();if(!t)return;if(u.ns)return toast('Вам запрещено писать'),no();db.sup.push({u:u.n,t,a:0,ts:Date.now()});if(db.tk[u.n])db.tk[u.n].done=0;save();render();snd(700);const sm=$('#sm');sm&&sm.focus()},
+edit(b){ed=b.dataset.k;render();const i=$('#ei');i&&i.focus()},
+esave(b){const k=b.dataset.k,raw=$('#ei').value,v=k=='p'?raw:raw.trim();db=load();const u=cur();
+if(k=='n'){if(!NICK.test(v))return toast('Ник: 3–16 символов'),no();const o=U(v);if(o&&o!==u)return toast('Ник занят'),no();db.sup.forEach(m=>{if(m.u===u.n)m.u=v});u.n=v;me=v;ST.s('si_me',v)}
+else{if(v.length<4)return toast('Пароль: минимум 4 символа'),no();u.p=v;delete u.h}
+save();ed=null;render();ok();toast('Сохранено')},
+ecancel(){ed=null;render()},
+delchat(b){db=load();const a=cur(),n=b.dataset.n;if(!a||a.adm!=2)return;if(cd!==n){cd=n;toast('Нажми ещё раз — чат удалится у всех');clearTimeout(cdt);cdt=setTimeout(()=>{cd=null},4000);return no()}cd=null;db.sup=db.sup.filter(m=>m.u!==n);delete db.tk[n];save();view='adsup';xp=null;render();snd(300);toast('Чат удалён')},
+lo(){logout()},
+slink(){const v=$('#lk').value.trim();if(!/^https?:\/\/\S+$/i.test(v))return toast('Нужна ссылка http(s)://…'),no();db=load();db.link=v;save();render();ok();toast('Ссылка изменена')},
+dlink(){db=load();db.link='';save();render();snd(300);toast('Ссылка удалена')},
+mod(b){db=load();const a=cur(),k=b.dataset.k,t=U($('#pn').value.trim());if(!a||!a.adm)return;
+if(!t)return toast('Игрок не найден'),no();if(t.adm==2)return toast('Главного админа трогать нельзя'),no();
+if(k=='ban')t.ban=t.ban?0:1;else if(k=='ns')t.ns=t.ns?0:1;else if(k=='kick')t.kick=Date.now();
+else{const p=$('#np').value;if(p.length<4)return toast('Новый пароль: минимум 4 символа'),no();t.p=p;delete t.h}
+db.log.push(new Date().toLocaleString('ru-RU')+' — '+a.n+' '+{ban:t.ban?'забанил':'разбанил',ns:t.ns?'запретил поддержку игроку':'разрешил поддержку игроку',kick:'кикнул',pw:'сменил пароль игроку'}[k]+' '+t.n);save();ok();toast({ban:t.ban?'Забанен':'Разбанен',ns:t.ns?'Поддержка запрещена':'Поддержка разрешена',kick:'Кикнут',pw:'Пароль изменён'}[k])},
+adm(b){db=load();const a=cur(),t=U($('#an').value.trim()),g=b.dataset.k=='1';if(!a||!a.adm)return;
+if(!t)return toast('Игрок не найден'),no();if(t.adm==2)return toast('Это главный админ'),no();if(!g&&a.adm!=2)return;
+if(!!t.adm==g)return toast(g?'Уже админ':'Он не админ'),no();
+t.adm=g?1:0;db.log.push(new Date().toLocaleString('ru-RU')+' — '+a.n+(g?' выдал админку игроку ':' снял админку у ')+t.n);save();render();ok()},
+xp(b){xp=xp==b.dataset.n?null:b.dataset.n;render()},
+opn(b){ct=b.dataset.n;view='adchat';render();const v=$('#view');v.scrollTop=v.scrollHeight},
+fin(b){db=load();const n=b.dataset.n,a=cur();if(!a||!a.adm)return;const o=db.tk[n]&&db.tk[n].done;db.tk[n]={done:o?0:1,by:a.n};save();render();ok()},
+dmsg(b){db=load();const a=cur();if(!a||a.adm!=2)return;const i=db.sup.findIndex(m=>m.u===b.dataset.n&&String(m.ts)===b.dataset.ts);if(i<0)return;db.sup.splice(i,1);save();render();snd(300)},
+areply2(b){const i=$('#am'),t=i?i.value.trim():'',n=b.dataset.n;if(!t)return;db=load();const a=cur();if(!a||!a.adm)return;db.sup.push({u:n,t,a:1,by:a.n,ts:Date.now()});save();render();snd(700);const am=$('#am');am&&am.focus()},
+areply(b){const n=b.dataset.n,i=document.querySelector(`[data-r="${n}"]`),t=i?i.value.trim():'';if(!t)return;db=load();db.sup.push({u:n,t,a:1,by:cur().n,ts:Date.now()});save();render();snd(700)}
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b&&A[b.dataset.a]){snd(520,.06);A[b.dataset.a](b)}});
+document.addEventListener('keydown',e=>{const t=e.target;if(e.key!='Enter'||!t.matches('#f1,#f2,#f3,#sm,#ei,#am'))return;const b=t.closest('#fm,.card,.row').querySelector('[data-a=reg],[data-a=log],[data-a=ssend],[data-a=esave],[data-a=areply2]');b&&b.click()});
+document.addEventListener('pointerdown',e=>{if(e.target.closest('#eye')){const u=cur(),w=$('#pw');if(u&&w)w.textContent=u.h?(pw0||'не хранится'):u.p}});
+['pointerup','pointercancel'].forEach(ev=>document.addEventListener(ev,()=>{const w=$('#pw'),u=cur();if(w&&u)w.textContent='•'.repeat(u.p.length)}));
+document.addEventListener('contextmenu',e=>{if(e.target.closest('#eye'))e.preventDefault()});
+setInterval(()=>{if(!me)return;db=load();const u=cur();if(!u||u.ban||u.kick>sT())return logout(!u||u.ban?'Аккаунт недоступен':'Вас кикнул админ');if(sig()!==sg)tickRender()},2500);
+
+(function boot(){const n=ST.g('si_me');db=load();const u=n&&U(n);if(u&&!u.ban){me=u.n;scr('app');render()}else{scr('intro');started=1;start()}})();
+</script>
+</body>
+</html>
